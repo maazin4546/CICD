@@ -1,0 +1,33 @@
+stages:
+  - install
+  - test
+  - deploy
+
+variables:
+  NODE_ENV: development
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: install
+  image: node:18
+  script:
+    - npm install
+
+run_tests:
+  stage: test
+  image: node:18
+  script:
+    - npm run lint
+    - npm test
+
+deploy_to_render:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - echo "Triggering Render deploy..."
+    - curl -X POST https://api.render.com/deploy/srv-d185s695pdvs73btc7ag?key=gCv0d1LQC5Q
+  only:
+    - main
